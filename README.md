@@ -1,4 +1,4 @@
-# catalystOne
+# Catalyst One
 Its a design template inspired and suggesting improvement for catalystone.com
 
 See the template here:
