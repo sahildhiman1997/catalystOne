@@ -80,6 +80,16 @@
 .playbtn{
     margin-left:7px;
 }
+.featuresbox:hover{
+    box-shadow: 0 1px 6px 2px #ddd;
+    transform: translateY(-3px);
+    transition-duration: .3s;
+    border-radius:5px;
+}
+.btn-transparentprimary:hover{
+    color:#fff; 
+    border:1px solid #fff;
+}
 @media(max-width:457px){
     .buttons-wrapper a{
         display:block;
