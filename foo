@@ -1,0 +1,82 @@
+def solution(matrix):
+    h=len(matrix)
+    w=len(matrix[0])
+    matrix1=[[h*w+1]*w for _ in range(h)] #simply creating copies overrides value in all copies, so had to make copies this way using for
+    row=0
+    for a in matrix:
+        col=0
+        for b in a:
+            if ( matrix[row][col] == 1):
+                matrix1[row][col]=1000 # setting walls almost to infinity
+            col+=1
+        row+=1
+    matrix1[0][0]=1
+
+    def getminval(row,col,currentmatrix): #function for getting minimum values from its neighours, used in step 3
+        if (row < h-1):
+            if(currentmatrix[row][col]>currentmatrix[row+1][col]):
+                currentmatrix[row][col]=currentmatrix[row+1][col]+1
+            
+        if (col < w-1):
+            if(currentmatrix[row][col]>currentmatrix[row][col+1]):
+                currentmatrix[row][col]=currentmatrix[row][col+1]+1
+
+        if(row !=0 ):
+            if(currentmatrix[row][col]>currentmatrix[row-1][col]):
+                currentmatrix[row][col]=currentmatrix[row-1][col]+1
+
+
+        if(col !=0 ):
+            if(currentmatrix[row][col]>currentmatrix[row][col]-1):
+                currentmatrix[row][col]=currentmatrix[row][col-1]+1
+
+
+    def passminval(row,col,currentmatrix): #function for passing  minimum value to neighours
+        if(row < h-1):
+            if (currentmatrix[row+1][col] != 1000 and currentmatrix[row+1][col] > currentmatrix[row][col]):
+                currentmatrix[row+1][col] = currentmatrix[row][col]+1
+                passminval(row+1,col,currentmatrix)
+                
+        if(col < w-1):
+            if (currentmatrix[row][col+1] != 1000 and currentmatrix[row][col+1] > currentmatrix[row][col]):
+                currentmatrix[row][col+1] = currentmatrix[row][col]+1
+                passminval(row,col+1,currentmatrix)
+        
+        if(row !=0 ):
+            if (currentmatrix[row-1][col] != 1000 and currentmatrix[row-1][col] > currentmatrix[row][col]):
+                currentmatrix[row-1][col]=currentmatrix[row][col]+1
+                passminval(row-1,col,currentmatrix)
+        
+        if(col !=0):
+            if (currentmatrix[row][col-1] != 1000 and currentmatrix[row][col-1] > currentmatrix[row][col]):
+                currentmatrix[row][col-1]=currentmatrix[row][col]+1
+                passminval(row,col-1,currentmatrix)
+
+    # step2 measuring minimum distance for positions which are not walls
+    row=0
+    for a in matrix:
+        col=0
+        for b in a:
+            if ( matrix1[row][col] == 1000):
+                continue
+            else:
+                passminval(row,col,matrix1)
+            col+=1
+        row+=1
+    mindistance=matrix1[h-1][w-1]
+    # step 3 measuring distance by removing every wall, one at a time
+    row=0
+    for a in matrix:
+        col=0
+        for b in a:
+            if (matrix1[row][col] == 1000):
+                matrix2=matrix1
+                getminval(row,col,matrix2)
+                passminval(row,col,matrix2)
+                currentmin=matrix2[h-1][w-1]
+                if(currentmin<mindistance):
+                    mindistance=currentmin
+            col+=1
+        row+=1
+    return mindistance
+solution([[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
